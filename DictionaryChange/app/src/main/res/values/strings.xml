@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DictionaryChange</string>
+    <string-array name="OSe">
+        <item>Android</item>
+        <item>iOS</item>
+        <item>Windows</item>
+        <item>Ubuntu</item>
+        <item>MacOS</item>
+    </string-array>
+</resources>
