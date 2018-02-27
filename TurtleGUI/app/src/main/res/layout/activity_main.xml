@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.chenye.turtlegui.MainActivity">
+
+    <Spinner
+        android:id="@+id/Spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </Spinner>
+    <!--
+    <RadioGroup
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/MikeTurtle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mike"
+            android:onClick="chooseTurtle"/>
+        <RadioButton
+            android:id="@+id/DonTurtle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don"
+            android:onClick="chooseTurtle"/>
+        <RadioButton
+            android:id="@+id/LeoTurtle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leo"
+            android:onClick="chooseTurtle"/>
+        <RadioButton
+            android:id="@+id/RaphTurtle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Raph"
+            android:onClick="chooseTurtle"/>
+
+    </RadioGroup>
+    !-->
+    <ImageButton
+        android:id="@+id/turtleImg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/mike"/>
+
+
+</LinearLayout>
