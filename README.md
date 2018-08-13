@@ -1,2 +1,2 @@
 # AndroidProject
-add intent2Test
+add intentTest2
