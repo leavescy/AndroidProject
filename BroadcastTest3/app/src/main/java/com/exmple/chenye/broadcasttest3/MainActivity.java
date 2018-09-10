@@ -1,4 +1,4 @@
-package com.example.chenye.app;
+package com.exmple.chenye.broadcasttest3;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
