@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <Button
@@ -10,5 +11,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/dbHelperBtn"
         android:text="Create database"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addDataBtn"
+        android:text="Add data"/>
 
 </LinearLayout>
