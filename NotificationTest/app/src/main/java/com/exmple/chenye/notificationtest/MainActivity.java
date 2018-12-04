@@ -4,7 +4,9 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 builder.setContentTitle("收到一条订阅消息");
                 builder.setContentText("地铁沿线30分钟商铺招商中.");
                 builder.setNumber(10);
-                manager.notify(1,  builder.build());
+                manager.notify(2,  builder.build());
                 break;
             case R.id.send_chat:
                 NotificationManager managers = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -79,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra(Settings.EXTRA_CHANNEL_ID, channel.getId());
                         startActivity(intent);
                     }
-
                 }
                 builders.setSmallIcon(R.drawable.notify);
                 builders.setTicker("This is ticker text.");
@@ -87,7 +88,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 builders.setContentTitle("收到一条聊天消息");
                 builders.setContentText("今天几点下班啊?");
                 builders.setNumber(10);
-                managers.notify(1,  builders.build());
+                long[] vibrates = {0, 2000, 2000, 2000};
+                Intent intent = new Intent(this, NotificationActivity.class);
+                PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                builders.setContentIntent(pi);
+                Notification notification = builders.build();
+                notification.vibrate = vibrates;
+                notification.ledARGB = Color.GREEN;
+                notification.ledOnMS = 1000;
+                notification.ledOffMS = 1000;
+                notification.flags = Notification.FLAG_FOREGROUND_SERVICE;
+                managers.notify(1,  notification);
                 break;
 
             default:
