@@ -2,10 +2,13 @@ package com.exmple.chenye.choosepictest;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -28,7 +31,7 @@ public class BaseActivity extends AppCompatActivity {
         mPermission = permission;
         mPermissionCode = permissionCode;
         // 检查自身是否有此权限
-        if (PackageManager.PERMISSION_DENIED == checkSelfPermission(permission)) {
+        if (PackageManager.PERMISSION_DENIED == ContextCompat.checkSelfPermission(this,  permission)) {
             // 如果没有，就去申请权限
             requestPermissions(new String[]{permission}, mPermissionCode);
         } else {
@@ -62,22 +65,20 @@ public class BaseActivity extends AppCompatActivity {
     protected void showReasonDialog() {
         new AlertDialog.Builder(this)
                 .setMessage(mReason)
-                .setNegativeButton("取消", (dialog, which) -> {
-                    // 用户点击取消时，返回权限被拒绝
-                    dialog.dismiss();
-                    mCallback.onPermissionResult(false, mPermissionCode);
-                })
-                .setPositiveButton("确定", ((dialog, which) -> {
-                    // 用户点击确定时，继续申请
-                    dialog.dismiss();
-                    requestPermissions(new String[]{mPermission}, mPermissionCode);
-                }))
-                .create().show();
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        mCallback.onPermissionResult(false, mPermissionCode);
+                    }
+                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                requestPermissions(new String[]{mPermission}, mPermissionCode);
+            }
+        }).create().show();
     }
-
-    // 权限申请回调的接口类
-    public interface PermissionCallback {
-        void onPermissionResult(boolean result, int permissionCode);
-    }
-
 }
+
+

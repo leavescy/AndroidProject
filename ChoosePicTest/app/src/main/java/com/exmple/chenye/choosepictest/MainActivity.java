@@ -13,7 +13,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,7 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PermissionCallback{
 
     private ImageView picture;
     private Button take_phone;
@@ -33,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int TAKE_PHOTO = 1;
     private static final int CROP_PHOTO = 2;
     private static final int CHOOSE_PHONE = 3;
+
+    BaseActivity baseActivity = new BaseActivity();
+    PermissionCallback callback = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
                     outputImage.delete();
                 }
                 try {
+                    baseActivity.requestPermissionWithReason(" Manifest.permission.WRITE_EXTERNAL_STORAGE","申请外部存储权限", 1, callback);
                     outputImage.createNewFile();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -141,5 +144,10 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Fail to get image", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onPermissionResult(boolean result, int permissionCode) {
+        Toast.makeText(this, "申请权限失败", Toast.LENGTH_SHORT).show();
     }
 }
