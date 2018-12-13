@@ -1,20 +1,32 @@
 package com.exmple.chenye.choosepictest;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.webkit.WebView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseActivity extends AppCompatActivity {
 
     private String mReason;
     private int mPermissionCode;
     private String mPermission;
+    //private PermissionCallback mCallback;
+    private Context mContext;
     private PermissionCallback mCallback;
 
 
@@ -23,22 +35,28 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
-    @TargetApi(23)
-    protected void requestPermissionWithReason(String permission, String reason,
-                                               int permissionCode, PermissionCallback callback) {
-        mReason = reason;
-        mCallback = callback;
-        mPermission = permission;
-        mPermissionCode = permissionCode;
+    @TargetApi(value = Build.VERSION_CODES.M)
+    protected void requestPermissionWithReason(Context context, int permissionCode, String permission) {
+
+        this.mPermission = permission;
+        this.mPermissionCode = permissionCode;
+        this.mContext = context;
+       // this.mCallback = callback;
+
         // 检查自身是否有此权限
-        if (PackageManager.PERMISSION_DENIED == ContextCompat.checkSelfPermission(this,  permission)) {
+        if (PackageManager.PERMISSION_DENIED == ActivityCompat.checkSelfPermission(context, permission)) {
             // 如果没有，就去申请权限
-            requestPermissions(new String[]{permission}, mPermissionCode);
+
+            ActivityCompat.requestPermissions((Activity)mContext, new String[]{mPermission}, mPermissionCode);
+
+
         } else {
             // 如果有，则调用callback
-            callback.onPermissionResult(true, mPermissionCode);
+
         }
     }
+
+
 
     // 系统回调的permission结果
     @Override
@@ -51,7 +69,7 @@ public class BaseActivity extends AppCompatActivity {
             mCallback.onPermissionResult(true, mPermissionCode);
         } else {
             // 权限申请失败时，判断是否需要告诉用户原因
-            if (shouldShowRequestPermissionRationale(permissions[0])) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
                 // 如果需要解释原因，则弹窗告诉用户
                 showReasonDialog();
             } else {
@@ -63,7 +81,7 @@ public class BaseActivity extends AppCompatActivity {
 
     // 弹窗展示权限申请原因,设定为protected是为了方便修改其它权限解释方式
     protected void showReasonDialog() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(mContext)
                 .setMessage(mReason)
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
@@ -75,7 +93,7 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                requestPermissions(new String[]{mPermission}, mPermissionCode);
+                ActivityCompat.requestPermissions((Activity)mContext, new String[]{mPermission}, mPermissionCode);
             }
         }).create().show();
     }

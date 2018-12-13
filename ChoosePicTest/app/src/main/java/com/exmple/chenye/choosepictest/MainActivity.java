@@ -1,6 +1,7 @@
 package com.exmple.chenye.choosepictest;
 
 
+import android.Manifest;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,8 +12,9 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,28 +36,30 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
     private static final int CHOOSE_PHONE = 3;
 
     BaseActivity baseActivity = new BaseActivity();
-    PermissionCallback callback = this;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         picture = findViewById(R.id.picture);
         take_phone = findViewById(R.id.take_phone);
         take_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                baseActivity.requestPermissionWithReason(MainActivity.this, 1,  Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 File outputImage = new File(Environment.getExternalStorageDirectory(), "output_image.jpg");
                 if(outputImage.exists()){
                     outputImage.delete();
                 }
                 try {
-                    baseActivity.requestPermissionWithReason(" Manifest.permission.WRITE_EXTERNAL_STORAGE","申请外部存储权限", 1, callback);
                     outputImage.createNewFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                imageUri = Uri.fromFile(outputImage);
+                //imageUri = Uri.fromFile(outputImage);
+                imageUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID+".provider", outputImage);
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 startActivityForResult(intent, TAKE_PHOTO);
@@ -148,6 +152,10 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
 
     @Override
     public void onPermissionResult(boolean result, int permissionCode) {
-        Toast.makeText(this, "申请权限失败", Toast.LENGTH_SHORT).show();
+        if(result){
+            Toast.makeText(this, "申请权限成功", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "申请权限失败", Toast.LENGTH_SHORT).show();
+        }
     }
 }
