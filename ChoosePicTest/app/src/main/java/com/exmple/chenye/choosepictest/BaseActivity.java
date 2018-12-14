@@ -66,6 +66,7 @@ public class BaseActivity extends AppCompatActivity {
         if (requestCode == mPermissionCode
                 && grantResults[0] != PackageManager.PERMISSION_DENIED) {
             // 权限申请成功
+            Log.i("result=", "成功");
             mCallback.onPermissionResult(true, mPermissionCode);
         } else {
             // 权限申请失败时，判断是否需要告诉用户原因
